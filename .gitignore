@@ -1,0 +1,9 @@
+# Grant-level and personal data are never committed (see data/README.md)
+data/raw/*
+data/interim/*
+data/processed/*
+!data/README.md
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+.DS_Store
