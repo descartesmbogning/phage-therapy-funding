@@ -5,6 +5,10 @@
   "niaid_share_pct":21.0,
   "global_north_funders_pct":98.3,
   "lmic_low_recipients_pct":0.34,
+  "high_income_recipients_pct":97.8,
+  "global_south_recipients_pct":2.1,
+  "china_share_of_global_south_pct":73.2,
+  "domestic_funding_pct":88.7,
   "grant_growth":{
     "annual_growth_pct":12.2,
     "ci_low":10.0,
