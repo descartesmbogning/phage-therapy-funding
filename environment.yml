@@ -13,6 +13,7 @@ dependencies:
   - gensim>=4.3
   - wordcloud>=1.9
   - openpyxl>=3.1
+  - plotly>=5.18
   - jupyter
   - pip
   - pip:
