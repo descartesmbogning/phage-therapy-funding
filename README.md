@@ -11,7 +11,10 @@ The method follows the phage therapy patent landscape study by Mbogning Fonkou &
 | Growth in grants per year, 1999–2022 (log-linear) | +12.2% per year (95% CI 10.0–14.5) | Fig. 1, Table S2 |
 | Growth in funding per year, 1999–2022 (nominal USD) | +16.6% per year (95% CI 12.6–20.7) | Fig. 1, Table S2 |
 | Funding from high-income countries | 98.3% | Fig. 4, Table 5 |
+| Funding received by high-income countries | 97.8% | Fig. 4, Table 5 |
+| Funding received by the Global South (73% of it by China) | 2.1% | Tables S4, S11 |
 | Funding received by lower-middle and low-income countries | 0.34% | Fig. 4, Table 5 |
+| Funding that stays in the funder's own country | 88.7% | Table S12 |
 | Share of funding from NIAID | 21.0% | Table 2a |
 | Female-only vs male-only grant size (adjusted) | −27% (95% CI −43 to −8) | Fig. 3, Table S3 |
 
@@ -28,7 +31,9 @@ The method follows the phage therapy patent landscape study by Mbogning Fonkou &
 ├── outputs/
 │   ├── figures/                   Fig1–Fig4, FigS1 (PNG 300 dpi and PDF)
 │   └── tables/                    Tables 1–5, S1–S10, key_numbers.json
-├── data/                          not in the repository; see data/README.md
+├── data/
+│   ├── reference/country_classification.csv   public: country income group and North/South
+│   └── raw/, interim/, processed/             private, not in the repository (data/README.md)
 ├── docs/methods.md                search query and methods in full
 ├── archive/2024_colab/            original 2024 notebooks, kept for the record
 ├── environment.yml
@@ -60,6 +65,7 @@ On a laptop the whole run takes about 10 minutes.
 | Figure S1: topic coherence | 02 | `FigS1_topic_coherence` |
 | Tables S1–S7: data quality, growth, tests, geography, engagement | 03 | `S1`–`S7_*.csv` |
 | Tables S8–S10: coherence, stability, topic words | 02 | `S8`–`S10_*.csv` |
+| Tables S11–S13: Global South by country, domestic vs cross-border, cross-border funders | 03 | `S11`–`S13_*.csv` |
 
 ## Corrections compared with the 2024–25 Colab notebooks
 1. **Growth rate.** Now computed on USD amounts with a log-linear fit. The old CAGR used original-currency amounts and 25 intervals instead of 24.
@@ -68,6 +74,8 @@ On a laptop the whole run takes about 10 minutes.
 4. **Topic coherence.** Now computed with the correct word order. k = 5 is still the best choice.
 5. **Duplicate texts.** 17 grants whose text duplicated another grant had no topic. They now take their twin's topic.
 6. **Figures.** All figures are now drawn from the data, with no numbers typed into plotting code.
+7. **Country labels (v1.1).** The hand-made recipient file labelled Switzerland, Sweden and Spain as "Global South / Upper middle income". Labels now come from one reference table for funders and recipients. Global South recipients: 6.7% → 2.1% of funding.
+8. **EU funders (v1.1).** The European Commission and the ERC (23 grants) were coded as funder country Belgium. They are now "European Union".
 
 ## Limitations to keep in mind
 - **Coverage.** Dimensions covers NIH, European and Japanese funders well but many low- and middle-income country funders poorly.
