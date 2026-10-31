@@ -240,3 +240,127 @@ def engagement_summary(d: pd.DataFrame) -> pd.DataFrame:
 def missingness(d: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
     m = d[cols].isna().sum()
     return pd.DataFrame({"Present": len(d) - m, "Missing": m, "Missing (%)": (m / len(d) * 100).round(1)})
+
+
+# ---------------------------------------------------------------- v1.2: blocks ported from the Colab notebooks
+ENGAGEMENT_LABELS = ["Continuant", "Newcomer", "Terminator", "Transient"]
+
+
+def explode_entities(d: pd.DataFrame, col: str, sep: str = ";") -> pd.DataFrame:
+    """One row per (grant, entity), spaces trimmed, empty and 'nan' values dropped.
+
+    Port of `preprocess_entity_data` (trend_entities notebook). Replaces the old
+    `clean_entities`, whose set() lost the order of names.
+    """
+    out = d.assign(**{col: d[col].apply(split_list, sep=sep)}).explode(col)
+    return out.dropna(subset=[col])
+
+
+def engagement_by_year(d: pd.DataFrame, col: str = "Researchers", sep: str = ",",
+                       last_period: int = PARTIAL_YEAR) -> pd.DataFrame:
+    """Entities per year by engagement label (years x 4 labels, zeros kept).
+
+    Same per-year rules as `classify_entities_func` in the notebooks: in each year
+    an entity is active, it is a Newcomer (active later, never before), Continuant
+    (active before and after, or before and in the last period), Terminator (before,
+    never after) or Transient (that year only). Activity = grant start year.
+    Fixes from the notebooks: real years on the x-axis, 0 instead of NaN, and one
+    `last_period` (2023) for every subset so topics and genders are comparable.
+    """
+    active: dict[str, set[int]] = {}
+    for y, val in zip(d[YEAR], d[col]):
+        for ent in split_list(val, sep):
+            active.setdefault(ent, set()).add(int(y))
+    rows = []
+    for ys in active.values():
+        ys = sorted(ys)
+        for i, y in enumerate(ys):
+            before, after = i > 0, i < len(ys) - 1
+            if y == last_period:
+                lab = "Continuant" if before else "Newcomer"
+            elif before and after:
+                lab = "Continuant"
+            elif before:
+                lab = "Terminator"
+            elif after:
+                lab = "Newcomer"
+            else:
+                lab = "Transient"
+            rows.append((y, lab))
+    t = pd.DataFrame(rows, columns=["year", "label"])
+    out = pd.crosstab(t["year"], t["label"]) if len(t) else pd.DataFrame()
+    return out.reindex(index=range(1999, last_period + 1), columns=ENGAGEMENT_LABELS, fill_value=0)
+
+
+def researchers_by_gender_year(d: pd.DataFrame) -> pd.DataFrame:
+    """Distinct named researchers per start year, by inferred gender (port of count_gender_by_year)."""
+    rows = []
+    for y, names, gens in zip(d[YEAR], d["Researchers"], d["researcher_gender_list"]):
+        people = split_list(names, ",")
+        g = str(gens).split(";") if isinstance(gens, str) else []
+        for i, p in enumerate(people):
+            gi = g[i].strip() if i < len(g) else ""
+            rows.append((int(y), p, gi if gi in ("Male", "Female") else "Unknown"))
+    t = pd.DataFrame(rows, columns=["year", "person", "gender"]).drop_duplicates(["year", "person"])
+    out = pd.crosstab(t["year"], t["gender"]).reindex(index=range(1999, 2024), fill_value=0)
+    out = out.reindex(columns=["Male", "Female", "Unknown"], fill_value=0)
+    out["Female share (%)"] = (out["Female"] / (out["Male"] + out["Female"]) * 100).round(1)
+    return out
+
+
+def aligned_long(d: pd.DataFrame, list_col: str, org_col: str = "receiver_org_list") -> pd.DataFrame:
+    """Long table (grant, value, usd_frac, grant_frac) with 1/k per recipient institution."""
+    rows = []
+    for gid, amt, orgs, vals in zip(d["Grant ID"], d[USD], d[org_col], d[list_col]):
+        o = split_list(orgs)
+        v = str(vals).split(";") if isinstance(vals, str) else []
+        for i in range(len(o)):
+            val = v[i].strip() if i < len(v) and v[i].strip() not in ("", "nan") else "Not classified"
+            rows.append((gid, val, amt / len(o), 1 / len(o)))
+    return pd.DataFrame(rows, columns=["Grant ID", list_col, "usd_frac", "grant_frac"])
+
+
+def row_shares(d: pd.DataFrame, row: str, col: str, weight: str | None = None,
+               rows: list | None = None) -> pd.DataFrame:
+    """Row-normalised cross-table in %: each row sums to 100 (port of group_and_pivot)."""
+    t = pd.crosstab(d[row], d[col], values=d[weight] if weight else None,
+                    aggfunc="sum" if weight else None).fillna(0)
+    if rows is not None:
+        t = t.reindex(rows).fillna(0)
+    return (t.div(t.sum(axis=1), axis=0) * 100).round(1)
+
+
+def country_flows(d: pd.DataFrame) -> pd.DataFrame:
+    """Funding from funder country to recipient country, fractional per institution (USD)."""
+    f = aligned_long(d, "receiver_country_list").merge(d[["Grant ID", "Funder Country"]], on="Grant ID")
+    out = f.groupby(["Funder Country", "receiver_country_list"]).agg(
+        grants_frac=("grant_frac", "sum"), usd_frac=("usd_frac", "sum")).reset_index()
+    out = out.rename(columns={"receiver_country_list": "Recipient country"})
+    out["domestic"] = out["Funder Country"] == out["Recipient country"]
+    return out.sort_values("usd_frac", ascending=False)
+
+
+def jaccard_matrix(words: dict[str, list[str]]) -> pd.DataFrame:
+    """Pairwise Jaccard similarity of topic word lists (port of jaccard_similarity)."""
+    k = list(words)
+    m = [[len(set(words[a]) & set(words[b])) / len(set(words[a]) | set(words[b])) for b in k] for a in k]
+    return pd.DataFrame(m, index=k, columns=k).round(3)
+
+
+def distinctive_words(texts: pd.Series, groups: pd.Series, n: int = 30, min_df: int = 5) -> dict[str, list[str]]:
+    """Top-n words per group: mean grant-level TF-IDF within the group (for topics already assigned).
+
+    Words used in most grants (e.g. "phage") get a low IDF, so each list shows what
+    sets a topic apart rather than what all phage grants share.
+    """
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    vec = TfidfVectorizer(min_df=min_df, max_df=0.5, stop_words="english",
+                          token_pattern=r"(?u)\b[a-z][a-z]{2,}\b")
+    X = vec.fit_transform(texts.fillna("").str.lower().str.replace(r"\bnan\b", " ", regex=True))
+    terms = np.array(vec.get_feature_names_out())
+    g = np.asarray(groups)
+    out = {}
+    for k in pd.unique(g):
+        m = np.asarray(X[g == k].mean(axis=0)).ravel()
+        out[k] = list(terms[np.argsort(-m)[:n]])
+    return out

@@ -23,18 +23,21 @@ The method follows the phage therapy patent landscape study by Mbogning Fonkou &
 ├── notebooks/
 │   ├── 01_preprocessing.ipynb     build the analysis table (802 grants)
 │   ├── 02_topic_modelling.ipynb   LDA topics, coherence curve, seed stability
-│   └── 03_main_analysis.ipynb     every figure and table in the paper
+│   ├── 03_main_analysis.ipynb     every figure and table in the paper
+│   └── 04_supplementary_figures.ipynb   Figures S2–S10 from the 2024–25 notebooks, redrawn
 ├── src/
 │   ├── preprocess.py              joins grants, institution metadata, gender and topics
 │   ├── topics.py                  text cleaning, LDA, coherence, stability
-│   └── phagefund.py               growth, fractional counting, gender tests, engagement types
+│   ├── phagefund.py               growth, fractional counting, gender tests, engagement types
+│   └── figures.py                 reusable plotting blocks (heatmap, engagement lines, dendrogram, Sankey)
 ├── outputs/
-│   ├── figures/                   Fig1–Fig4, FigS1 (PNG 300 dpi and PDF)
-│   └── tables/                    Tables 1–5, S1–S10, key_numbers.json
+│   ├── figures/                   Fig1–Fig4, FigS1–S9 (PNG 300 dpi and PDF), FigS10 (HTML)
+│   └── tables/                    Tables 1–5, S1–S23, key_numbers.json
 ├── data/
 │   ├── reference/country_classification.csv   public: country income group and North/South
 │   └── raw/, interim/, processed/             private, not in the repository (data/README.md)
 ├── docs/methods.md                search query and methods in full
+├── docs/notebook_inventory.md     what each 2024–25 Colab notebook did, and what was kept
 ├── archive/2024_colab/            original 2024 notebooks, kept for the record
 ├── environment.yml
 └── run_all.sh
@@ -47,7 +50,7 @@ conda activate phagefund
 # put the input files in data/raw/ (see data/README.md)
 ./run_all.sh
 ```
-`run_all.sh` runs the notebooks in this order: 02 (topics), 01 (table), 03 (results).
+`run_all.sh` runs the notebooks in this order: 02 (topics), 01 (table), 03 (results), 04 (supplementary figures).
 On a laptop the whole run takes about 10 minutes.
 
 ## Figure and table map
@@ -66,6 +69,15 @@ On a laptop the whole run takes about 10 minutes.
 | Tables S1–S7: data quality, growth, tests, geography, engagement | 03 | `S1`–`S7_*.csv` |
 | Tables S8–S10: coherence, stability, topic words | 02 | `S8`–`S10_*.csv` |
 | Tables S11–S13: Global South by country, domestic vs cross-border, cross-border funders | 03 | `S11`–`S13_*.csv` |
+| Figure S2: grants per year, top 15 funders | 04 | `FigS2_funders_by_year`, `S14` |
+| Figure S3: each funder's grants by topic | 04 | `FigS3_topic_by_funder`, `S15` |
+| Figure S4: topics by recipient country and Global North/South | 04 | `FigS4_topic_by_recipient`, `S16` |
+| Figure S5: topic similarity (word overlap, clustering) | 04 | `FigS5_topic_similarity`, `S17`, `S18` |
+| Figure S6: named researchers by gender per year | 04 | `FigS6_researchers_by_gender`, `S19` |
+| Figure S7: team gender by topic | 04 | `FigS7_team_gender_by_topic`, `S20` |
+| Figure S8: researcher engagement over time, overall and by team gender | 04 | `FigS8_researcher_engagement`, `S21` |
+| Figure S9: institution engagement over time, by topic | 04 | `FigS9_institution_engagement_by_topic`, `S22` |
+| Figure S10: funder country → recipient country flows (interactive) | 04 | `FigS10_country_flows.html`, `S23` |
 
 ## Corrections compared with the 2024–25 Colab notebooks
 1. **Growth rate.** Now computed on USD amounts with a log-linear fit. The old CAGR used original-currency amounts and 25 intervals instead of 24.
@@ -76,6 +88,7 @@ On a laptop the whole run takes about 10 minutes.
 6. **Figures.** All figures are now drawn from the data, with no numbers typed into plotting code.
 7. **Country labels (v1.1).** The hand-made recipient file labelled Switzerland, Sweden and Spain as "Global South / Upper middle income". Labels now come from one reference table for funders and recipients. Global South recipients: 6.7% → 2.1% of funding.
 8. **EU funders (v1.1).** The European Commission and the ERC (23 grants) were coded as funder country Belgium. They are now "European Union".
+9. **Engagement plots (v1.2).** In the old notebooks the "Fund to female" plot reused the male data, several topic × gender sections read the full dataset, and plots used the row index for years with gaps for zero counts. Figures S8–S9 fix all three. Details in `docs/notebook_inventory.md`.
 
 ## Limitations to keep in mind
 - **Coverage.** Dimensions covers NIH, European and Japanese funders well but many low- and middle-income country funders poorly.
