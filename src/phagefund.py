@@ -364,3 +364,113 @@ def distinctive_words(texts: pd.Series, groups: pd.Series, n: int = 30, min_df: 
         m = np.asarray(X[g == k].mean(axis=0)).ravel()
         out[k] = list(terms[np.argsort(-m)[:n]])
     return out
+
+
+# ---------------------------------------------------------------- v1.3: concentration, collaboration, sensitivity
+NIAID = "National Institute of Allergy and Infectious Diseases"
+PERIODS = ([1998, 2008, 2015, 2023], ["1999-2008", "2009-2015", "2016-2023"])
+
+
+def hhi(values) -> float:
+    """Herfindahl-Hirschman index on a 0-10,000 scale (shares in %, squared, summed)."""
+    v = pd.Series(values, dtype=float)
+    s = v / v.sum() * 100
+    return round(float((s ** 2).sum()), 0)
+
+
+def gini(values) -> float:
+    v = np.sort(np.asarray(values, dtype=float))
+    n = len(v)
+    return round(float((2 * np.arange(1, n + 1) - n - 1).dot(v) / (n * v.sum())), 3)
+
+
+def lorenz(values) -> pd.DataFrame:
+    """Cumulative share of units (poorest first) vs cumulative share of the total."""
+    v = np.sort(np.asarray(values, dtype=float))
+    return pd.DataFrame({"units": np.r_[0, np.arange(1, len(v) + 1) / len(v)],
+                         "total": np.r_[0, np.cumsum(v) / v.sum()]})
+
+
+def top_share(values, frac: float = 0.10) -> float:
+    v = pd.Series(values, dtype=float).sort_values(ascending=False)
+    k = max(1, int(round(len(v) * frac)))
+    return round(float(v.head(k).sum() / v.sum() * 100), 1)
+
+
+def concentration(d: pd.DataFrame) -> pd.DataFrame:
+    """Concentration of funding across funders, funder countries, recipient countries, institutions."""
+    funders = d.groupby(FUNDER)[USD].sum()
+    fcountries = d.groupby("Funder Country")[USD].sum()
+    rcountries = aligned_long(d, "receiver_country_list").groupby("receiver_country_list")["usd_frac"].sum()
+    insts = fractional(d, "receiver_org_list")["usd_frac"]
+    rows = []
+    for name, v in [("Funders", funders), ("Funder countries", fcountries),
+                    ("Recipient countries (fractional)", rcountries), ("Recipient institutions (fractional)", insts)]:
+        rows.append({"Unit": name, "N": len(v), "HHI (0-10,000)": hhi(v), "Gini": gini(v),
+                     "Top 10% share (%)": top_share(v), "Largest unit": v.idxmax(),
+                     "Largest share (%)": round(v.max() / v.sum() * 100, 1)})
+    return pd.DataFrame(rows).set_index("Unit")
+
+
+def shares_by_period(d: pd.DataFrame) -> pd.DataFrame:
+    """US-funder and NIAID shares of funding, and funder HHI, per period."""
+    p = pd.cut(d[YEAR], PERIODS[0], labels=PERIODS[1])
+    rows = []
+    for lab, x in list(d.groupby(p, observed=True)) + [("All years", d)]:
+        tot = x[USD].sum()
+        rows.append({"Period": lab, "Grants": len(x), "Total (USD M)": round(tot / 1e6, 1),
+                     "US funders (%)": round(x.loc[x["Funder Country"] == "United States", USD].sum() / tot * 100, 1),
+                     "NIAID (%)": round(x.loc[x[FUNDER] == NIAID, USD].sum() / tot * 100, 1),
+                     "Funder HHI": hhi(x.groupby(FUNDER)[USD].sum())})
+    return pd.DataFrame(rows).set_index("Period")
+
+
+def collaboration(d: pd.DataFrame) -> pd.DataFrame:
+    """Counts only (no names): shared grants and repeat co-investigator pairs."""
+    from itertools import combinations
+    orgs = d["receiver_org_list"].apply(lambda v: set(split_list(v)))
+    ctry = d["receiver_country_list"].apply(lambda v: set(split_list(v)))
+    ns = d["receiver_north_south_list"].apply(lambda v: set(split_list(v)))
+    inc = d["receiver_income_list"].apply(lambda v: set(split_list(v)))
+    pairs: dict = {}
+    for v in d["Researchers"]:
+        for a, b in combinations(sorted(set(split_list(v, ","))), 2):
+            pairs[(a, b)] = pairs.get((a, b), 0) + 1
+    n = len(d)
+    multi_c = ctry.apply(len) > 1
+    rows = [
+        ("Grants with more than one recipient institution", int((orgs.apply(len) > 1).sum())),
+        ("Grants with recipients in more than one country", int(multi_c.sum())),
+        ("Distinct country pairs in those grants", len({p for c in ctry[multi_c] for p in combinations(sorted(c), 2)})),
+        ("Grants linking Global North and Global South recipients", int(ns.apply(lambda s: {"Global North", "Global South"} <= s).sum())),
+        ("Grants linking high-income and low or lower-middle income recipients",
+         int(inc.apply(lambda s: "High income" in s and bool(s & {"Low income", "Lower middle income"})).sum())),
+        ("Grants with 2 or more named researchers", int(d["Researchers"].apply(lambda v: len(split_list(v, ",")) >= 2).sum())),
+        ("Co-investigator pairs", len(pairs)),
+        ("Pairs that worked together on 2 or more grants", sum(1 for c in pairs.values() if c >= 2)),
+    ]
+    out = pd.DataFrame(rows, columns=["Measure", "Count"]).set_index("Measure")
+    out["Share of grants (%)"] = [round(c / n * 100, 1) if m.startswith("Grants") else np.nan for m, c in rows]
+    return out
+
+
+def deflate(d: pd.DataFrame, cpi: pd.DataFrame, base_year: int = 2023) -> pd.Series:
+    """Amounts in constant base-year USD using annual CPI-U (start year of the grant)."""
+    f = cpi.set_index("year")["cpi_u_annual_avg"]
+    return d[USD] * f[base_year] / d[YEAR].map(f)
+
+
+def without_funder(d: pd.DataFrame, funder: str = NIAID) -> pd.DataFrame:
+    """Growth and concentration with and without one funder (sensitivity check)."""
+    rows = []
+    for lab, x in [("All funders", d), (f"Without {funder}", d[d[FUNDER] != funder])]:
+        y = yearly(x)
+        g, u = loglinear_growth(y["grants"]), loglinear_growth(y["usd"])
+        tot = x[USD].sum()
+        rows.append({"Sample": lab, "Grants": len(x), "Total (USD M)": round(tot / 1e6, 1),
+                     "Grant growth (%/yr)": g["annual_growth_pct"], "Grant growth CI": f"{g['ci_low']} to {g['ci_high']}",
+                     "Funding growth (%/yr)": u["annual_growth_pct"], "Funding growth CI": f"{u['ci_low']} to {u['ci_high']}",
+                     "US funders (%)": round(x.loc[x["Funder Country"] == "United States", USD].sum() / tot * 100, 1),
+                     "Funder HHI": hhi(x.groupby(FUNDER)[USD].sum()),
+                     "Funder-country HHI": hhi(x.groupby("Funder Country")[USD].sum())})
+    return pd.DataFrame(rows).set_index("Sample")

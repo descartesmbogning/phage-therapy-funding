@@ -17,6 +17,12 @@ The method follows the phage therapy patent landscape study by Mbogning Fonkou &
 | Funding that stays in the funder's own country | 88.7% | Table S12 |
 | Share of funding from NIAID | 21.0% | Table 2a |
 | Female-only vs male-only grant size (adjusted) | −27% (95% CI −43 to −8) | Fig. 3, Table S3 |
+| Share of funding from US funders (NIAID: 14% → 17% → 23% across three periods) | 47.7% | Fig. 5, Tables S24–S25 |
+| Concentration across funder countries (HHI, 0–10,000) | 2,501 (highly concentrated) | Table S24 |
+| Funding received by the top 10% of recipient institutions | 53.4% (Gini 0.68) | Fig. 5, Table S24 |
+| Grants linking Global North and Global South recipients | 7 of 802 | Table S26 |
+| Growth in funding per year, constant 2023 USD (CPI-U) | +14.1% per year (95% CI 10.2–18.2) | Table S28 |
+| Growth without NIAID (grants / funding) | +11.7% / +16.2% per year | Table S27 |
 
 ## Repository structure
 ```
@@ -24,17 +30,20 @@ The method follows the phage therapy patent landscape study by Mbogning Fonkou &
 │   ├── 01_preprocessing.ipynb     build the analysis table (802 grants)
 │   ├── 02_topic_modelling.ipynb   LDA topics, coherence curve, seed stability
 │   ├── 03_main_analysis.ipynb     every figure and table in the paper
-│   └── 04_supplementary_figures.ipynb   Figures S2–S10 from the 2024–25 notebooks, redrawn
+│   ├── 04_supplementary_figures.ipynb   Figures S2–S10 from the 2024–25 notebooks, redrawn
+│   └── 05_concentration_and_sensitivity.ipynb   Figure 5, Figure S11, Tables S24–S29
 ├── src/
 │   ├── preprocess.py              joins grants, institution metadata, gender and topics
 │   ├── topics.py                  text cleaning, LDA, coherence, stability
 │   ├── phagefund.py               growth, fractional counting, gender tests, engagement types
 │   └── figures.py                 reusable plotting blocks (heatmap, engagement lines, dendrogram, Sankey)
 ├── outputs/
-│   ├── figures/                   Fig1–Fig4, FigS1–S9 (PNG 300 dpi and PDF), FigS10 (HTML)
-│   └── tables/                    Tables 1–5, S1–S23, key_numbers.json
+│   ├── figures/                   Fig1–Fig5, FigS1–S9, FigS11 (PNG 300 dpi and PDF), FigS10 (HTML)
+│   └── tables/                    Tables 1–5, S1–S29, key_numbers.json
 ├── data/
 │   ├── reference/country_classification.csv   public: country income group and North/South
+│   ├── reference/cpi_u_annual.csv             public: CPI-U annual averages 1999–2023
+│   ├── reference/draft_2025_values.csv        public: values quoted in the July 2025 draft
 │   └── raw/, interim/, processed/             private, not in the repository (data/README.md)
 ├── docs/methods.md                search query and methods in full
 ├── docs/notebook_inventory.md     what each 2024–25 Colab notebook did, and what was kept
@@ -50,7 +59,7 @@ conda activate phagefund
 # put the input files in data/raw/ (see data/README.md)
 ./run_all.sh
 ```
-`run_all.sh` runs the notebooks in this order: 02 (topics), 01 (table), 03 (results), 04 (supplementary figures).
+`run_all.sh` runs the notebooks in this order: 02 (topics), 01 (table), 03 (results), 04 (supplementary figures), 05 (concentration and sensitivity).
 On a laptop the whole run takes about 10 minutes.
 
 ## Figure and table map
@@ -78,6 +87,11 @@ On a laptop the whole run takes about 10 minutes.
 | Figure S8: researcher engagement over time, overall and by team gender | 04 | `FigS8_researcher_engagement`, `S21` |
 | Figure S9: institution engagement over time, by topic | 04 | `FigS9_institution_engagement_by_topic`, `S22` |
 | Figure S10: funder country → recipient country flows (interactive) | 04 | `FigS10_country_flows.html`, `S23` |
+| Figure 5: concentration (US and NIAID shares, Lorenz curve, top 10 funders by topic) | 05 | `Fig5_concentration`, `S24`, `S25` |
+| Table S26: collaboration counts | 05 | `S26_collaboration.csv` |
+| Table S27: growth and concentration without NIAID | 05 | `S27_without_niaid.csv` |
+| Table S28: growth in constant 2023 USD | 05 | `S28_real_growth.csv` |
+| Figure S11, Table S29: draft vs corrected values | 05 | `FigS11_corrections`, `S29_corrections_log.csv` |
 
 ## Corrections compared with the 2024–25 Colab notebooks
 1. **Growth rate.** Now computed on USD amounts with a log-linear fit. The old CAGR used original-currency amounts and 25 intervals instead of 24.

@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.3 (31 Oct 2026)
+- **Privacy.** The two notebooks in `archive/2024_colab/` were stripped of their saved outputs (researcher names with inferred gender, grant titles and abstracts); their code is unchanged. The git history was rewritten so that older commits no longer contain those outputs.
+- **New notebook `05_concentration_and_sensitivity`.**
+  - Concentration: HHI for funders (610), funder countries (2,501) and recipient countries (2,461); Gini 0.68 and top-10% share 53.4% across recipient institutions; US share 47.7%; NIAID share rising from 13.6% (1999–2008) to 23.3% (2016–2023). Figure 5, Tables S24–S25.
+  - Collaboration counts (no names): 135 multi-institution grants, 39 multi-country, 7 North–South, 73 repeat co-investigator pairs out of 2,045. Table S26.
+  - Without NIAID: growth barely changes (+11.7% grants, +16.2% funding per year); the US share falls to 33.8% and the funder-country HHI to 1,508. Table S27.
+  - Constant 2023 USD (CPI-U): funding growth +14.1% per year (95% CI 10.2–18.2); total USD 396.1M. Table S28.
+  - Corrections log and Figure S11: draft (July 2025) vs corrected values, with cause and fix. Table S29.
+- **Code.** `src/phagefund.py` gains `hhi`, `gini`, `lorenz`, `top_share`, `concentration`, `shares_by_period`, `collaboration`, `deflate`, `without_funder`.
+- **Reference data.** `data/reference/cpi_u_annual.csv` (BLS CPI-U) and `data/reference/draft_2025_values.csv`.
+- **Key numbers.** `key_numbers.json` gains the concentration, collaboration, real-growth and without-NIAID values.
+
 ## v1.2 (31 Oct 2026)
 - **New notebook `04_supplementary_figures`.** It redraws the figures worth keeping from the 2024–25 Colab notebooks (Figures S2–S10, Tables S14–S23).
 - **Code ported from the notebooks.**

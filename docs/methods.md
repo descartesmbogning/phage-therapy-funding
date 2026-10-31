@@ -50,3 +50,13 @@
     - **Transient:** active in one year only.
   - The summary uses each entity's last label.
   - Results are reported for two activity rules, start year only and the full grant span (Table S7), because the shares depend strongly on the rule.
+
+## 5. Concentration, collaboration and sensitivity (notebook 05, v1.3)
+- **Concentration.**
+  - Herfindahl-Hirschman index (HHI): the sum of squared percentage shares of funding, on a 0–10,000 scale. It is computed for funders, funder countries, and recipient countries (fractional counting). By the usual convention, above 2,500 is highly concentrated and 1,500–2,500 moderately concentrated.
+  - Gini coefficient and the share of funding received by the top 10% of recipient institutions (fractional counting).
+  - Shares of funding from US funders and from NIAID, for 1999–2008, 2009–2015 and 2016–2023 (by grant start year).
+- **Collaboration.** Counts only, with no names: grants with more than one recipient institution, more than one recipient country, both Global North and Global South recipients; co-investigator pairs and pairs that share two or more grants.
+- **Without NIAID.** Growth rates, the US share and the HHIs are re-estimated with NIAID grants removed.
+- **Constant dollars.** Amounts are converted to 2023 USD with the annual average CPI-U (all items, U.S. city average, 1982–84 = 100), by grant start year (`data/reference/cpi_u_annual.csv`). 1999–2021 come from the BLS CPI-U historical table; 2022 (292.655) and 2023 (304.702) from BLS data as published by the Idaho Department of Labor. Dimensions had already converted other currencies to USD, so only US inflation is removed.
+- **Corrections log.** The values quoted in the July 2025 draft are typed into `data/reference/draft_2025_values.csv` with the cause of each error and its fix; the corrected values are read from the repo outputs (Table S29, Figure S11).
