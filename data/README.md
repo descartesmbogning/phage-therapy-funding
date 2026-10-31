@@ -9,6 +9,7 @@ None of the files below are in the repository. Dimensions terms of use do not al
 | `raw/receiver_metadata.xlsx` | 535 | One row per recipient institution: country, region, type, World Bank income group (2023), Global North/South | Authors (it contains no personal data and can be shared on request) |
 | `raw/gender_lookup.xlsx` | ~1,150 | Researcher name and inferred gender (Gender API plus manual checks) | Authors only |
 | `raw/topic_probability_2024.pkl` | 799 | Frozen 2024 LDA output (k = 5) used in the paper | Authors |
+| `reference/country_classification.csv` | 40 | Country → World Bank income group and Global North/South, with notes on corrections. **Public, in the repository** | Included |
 | `interim/topic_assignments.csv` | 818 | Grant ID and topic. Written by `02_topic_modelling.ipynb` | Generated |
 | `processed/phage_funding_analysis.csv` | 802 | Analysis table. Written by `01_preprocessing.ipynb` | Generated |
 

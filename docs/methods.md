@@ -7,7 +7,11 @@
 
 ## 2. Enrichment
 - **Institutions.** Harmonised with GRID/ROR in Dimensions, then checked by hand. Missing co-recipients were added.
-- **Countries.** Each funder and recipient country is tagged with its World Bank income group (2023) and a Global North/South label.
+- **Countries.** Each funder and recipient country is tagged with its World Bank income group (2023) and a Global North/South label (World Population Review 2024).
+  - **One table for all labels (since v1.1).** Labels come from one table, `data/reference/country_classification.csv`, used for funders and recipients alike.
+  - **Earlier error.** The earlier hand-made recipient file labelled Switzerland, Sweden and Spain as Global South / upper-middle income.
+  - **Contested labels.** Georgia, Russia, Ukraine and Singapore are labelled differently in different sources. They keep the source label and are flagged in the table.
+  - **EU funders.** The European Commission and the European Research Council are coded as funder country "European Union".
 - **Gender.** Researcher gender is inferred from first names with Gender API. Ambiguous names were checked by hand.
 
 ## 3. Topics (notebook 02)
@@ -29,6 +33,7 @@
 
 ## 4. Analysis (notebook 03)
 - **Growth.** A log-linear fit of yearly counts and USD totals over 1999–2022, reported as % per year with a 95% CI. 2023 is excluded from the fit because of indexing lag.
+- **Domestic vs cross-border.** A grant is domestic when every recipient institution is in the funder's country (Table S12).
 - **Fractional counting.**
   - A grant with *k* recipient institutions gives 1/*k* of its amount to each one.
   - That share goes to the institution's country and income group.

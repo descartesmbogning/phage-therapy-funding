@@ -5,6 +5,7 @@ Inputs (all private, see data/README.md):
     data/raw/receiver_metadata.xlsx    one row per recipient institution: country, region, type, income group, North/South
     data/raw/gender_lookup.xlsx        one row per researcher name: inferred gender
     data/interim/topic_assignments.csv Grant ID -> LDA topic number (from 02_topic_modelling)
+    data/reference/country_classification.csv  country -> income group and Global North/South (public, in the repo)
 
 Output:
     data/processed/phage_funding_analysis.csv  (802 grants, 1999-2023)
@@ -15,6 +16,11 @@ Differences from the 2024-25 Colab notebook:
   New columns ending in `_list` are aligned one-to-one with `Research Organization - standardized`.
 - The legacy columns (Gender, Receiver - ...) are still produced, with the same rules, so earlier
   results can be compared.
+- Country labels (income group, Global North/South) come from one reference table for both funders
+  and recipients. The hand-made recipient file had Switzerland, Sweden and Spain as
+  "Global South / Upper middle income"; the reference table corrects this (v1.1).
+- The European Commission and the European Research Council are coded as funder country
+  "European Union" instead of Belgium (v1.1).
 """
 from __future__ import annotations
 
@@ -35,6 +41,9 @@ TOPIC_NAMES = {
     3: "Not Class.",
     4: "Bacteriophage Therapy and Infectious Disease Control",
 }
+
+
+EU_FUNDERS = {"European Commission", "European Research Council"}
 
 
 def _split(value, sep):
@@ -110,9 +119,27 @@ def add_topics(d: pd.DataFrame, topics: pd.DataFrame) -> pd.DataFrame:
     return d
 
 
-def build(grants_path, receivers_path, gender_path, topics_path) -> pd.DataFrame:
+def apply_country_classification(d: pd.DataFrame, ref_path) -> pd.DataFrame:
+    """Overwrite funder and recipient income / North-South labels from the reference table."""
+    ref = pd.read_csv(ref_path).set_index("country")
+    d["Funder Country (Dimensions)"] = d["Funder Country"]
+    d.loc[d["Funder"].isin(EU_FUNDERS), "Funder Country"] = "European Union"
+    d["Funder Income group"] = d["Funder Country"].map(ref["income_group"])
+    d["funder Global north - south"] = d["Funder Country"].map(ref["north_south"])
+    countries = d["receiver_country_list"].apply(lambda s: s.split(";") if isinstance(s, str) and s else [])
+    for new, legacy, col in [("receiver_income_list", "Receiver - Income group", "income_group"),
+                             ("receiver_north_south_list", "Receiver - Global north - south", "north_south")]:
+        vals = countries.apply(lambda cs: [str(ref[col].get(c, "")) for c in cs])
+        d[new] = vals.apply(";".join)
+        d[legacy] = vals.apply(lambda vs: ";".join(sorted({v for v in vs if v and v != "nan"})) or pd.NA)
+    return d
+
+
+def build(grants_path, receivers_path, gender_path, topics_path, countries_path=None) -> pd.DataFrame:
     d = load_grants(grants_path)
     d = add_receivers(d, load_receivers(receivers_path))
+    if countries_path is not None:
+        d = apply_country_classification(d, countries_path)
     d = add_gender(d, load_gender(gender_path))
     d = add_topics(d, pd.read_csv(topics_path))
     return d
