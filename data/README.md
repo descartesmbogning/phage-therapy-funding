@@ -10,6 +10,8 @@ None of the files below are in the repository. Dimensions terms of use do not al
 | `raw/gender_lookup.xlsx` | ~1,150 | Researcher name and inferred gender (Gender API plus manual checks) | Authors only |
 | `raw/topic_probability_2024.pkl` | 799 | Frozen 2024 LDA output (k = 5) used in the paper | Authors |
 | `reference/country_classification.csv` | 40 | Country → World Bank income group and Global North/South, with notes on corrections. **Public, in the repository** | Included |
+| `reference/cpi_u_annual.csv` | 25 | Annual average CPI-U 1999–2023 (BLS), used for constant-dollar growth. **Public** | Included |
+| `reference/draft_2025_values.csv` | 10 | Values quoted in the July 2025 manuscript draft, with cause and fix, for the corrections log. **Public** | Included |
 | `interim/topic_assignments.csv` | 818 | Grant ID and topic. Written by `02_topic_modelling.ipynb` | Generated |
 | `processed/phage_funding_analysis.csv` | 802 | Analysis table. Written by `01_preprocessing.ipynb` | Generated |
 

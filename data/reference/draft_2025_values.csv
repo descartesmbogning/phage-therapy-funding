@@ -1,0 +1,11 @@
+key,label,unit,draft_value,draft_wording,cause,fix
+grant_growth,Growth in grants per year,% per year,8.2,"CAGR of 8.2% in grant numbers",Endpoint CAGR over 25 intervals instead of 24,Log-linear fit 1999-2022 with 95% CI
+usd_growth,Growth in funding per year,% per year,20.6,"20.6% increase in funding volume (CAGR)",Endpoint CAGR on original-currency amounts,Log-linear fit on USD amounts 1999-2022
+global_north_funders,Funding from Global North funders,% of funding,95.0,"95% of funds originating and circulating within the Global North",Rounded claim mixing funder and recipient sides; Switzerland/Sweden/Spain mislabelled,One reference country table; funder and recipient reported separately
+global_south_recipients,Funding received by the Global South,% of funding,9.4,"Global South countries ... received USD 30.0M (of 318.6M)",Switzerland/Sweden/Spain labelled Global South; shared grants counted fully per institution,Reference country table; fractional counting per institution
+female_funding_share,Funding to female (draft) / female-only (corrected) teams,% of funding,31.3,"female-led projects (n = 297) secured USD 99.8 million",Overlapping groups: any grant with a woman counted as female-led; mixed teams counted twice,Exclusive groups: male only / female only / mixed / no named researcher
+transient_researchers,Researchers active in a single year,% of researchers,80.8,"881 out of 1091 researchers (80.8%)","Denominator was the name-lookup table (1,091 rows) instead of researchers in the data",Count distinct named researchers in the 802 grants
+continuant_researchers,Continuant researchers,count,15,"only 15 researchers (1.4%)",Missing researcher lists became a fake researcher called 'Nan',Drop missing values before counting
+north_south_grants,Grants shared by Global North and Global South institutions,grants,18,"collab notebook: 18 North-South collaborations",Mislabelled countries,Reference country table
+topic_infectious,Grants: infectious disease control,grants,272,"272 grants",17 duplicate-text grants had no topic,Duplicates take their twin's topic
+topic_resistance,Grants: antibiotic resistance strategies,grants,150,"150 grants",Same,Same
