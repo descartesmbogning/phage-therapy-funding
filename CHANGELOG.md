@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.4 (31 Oct 2026)
+- **Figure style.** All figures now use the CognosX brand palette and type from [github.com/cognosx/brand](https://github.com/cognosx/brand):
+  - categorical colours in fixed order: amber `#C98000`, blue `#2F64B5`, brick `#C24A2E`, teal `#0E9A7E`, violet `#8A4FB0` (checked for colour-vision deficiency);
+  - an amber sequential ramp for heatmaps; light amber `#f6cf85` for the partial year 2023;
+  - Inter for text; ink `#141414`, axis text `#5c5c5c`, grid `#e6e3dd`.
+- Figures carry no logo or credit line, so they stay suitable for journals.
+- Captions that named colours were updated (Figures S10, S11). Labels on amber bars are dark for contrast (Figure 2).
+- No numbers changed: every table and `key_numbers.json` is byte-identical after the re-run.
+
 ## v1.3 (31 Oct 2026)
 - **Privacy.** The two notebooks in `archive/2024_colab/` were stripped of their saved outputs (researcher names with inferred gender, grant titles and abstracts); their code is unchanged. The git history was rewritten so that older commits no longer contain those outputs.
 - **New notebook `05_concentration_and_sensitivity`.**

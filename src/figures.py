@@ -2,7 +2,8 @@
 
 Every function draws on a Matplotlib axis you pass in, so the same block can be
 used in a single figure or in small multiples. Colours come from phagefund.PALETTE
-(categorical, fixed order) and SEQ (one-hue blue ramp for heatmaps).
+(categorical, fixed order) and SEQ (one-hue amber ramp for heatmaps), from the CognosX
+brand kit (github.com/cognosx/brand). Figures carry no logo or credit line (journal use).
 """
 from __future__ import annotations
 
@@ -15,13 +16,14 @@ from matplotlib.colors import LinearSegmentedColormap
 
 import phagefund as pf
 
-# Sequential blue ramp (steps 100 -> 700 of the reference palette)
-SEQ = ["#cde2fb", "#9ec5f4", "#6da7ec", "#3987e5", "#256abf", "#184f95", "#0d366b"]
-SEQ_CMAP = LinearSegmentedColormap.from_list("seq_blue", SEQ)
+# Sequential amber ramp (CognosX seq-100 -> seq-700)
+SEQ = ["#fbe9c7", "#f6cf85", "#eeb043", "#d98e0b", "#b87500", "#8f5a00", "#5f3c00"]
+SEQ_CMAP = LinearSegmentedColormap.from_list("cognosx_amber", SEQ)
 ENGAGEMENT_COLORS = dict(zip(pf.ENGAGEMENT_LABELS, pf.PALETTE[:4]))
 
 STYLE = {
-    "font.size": 10, "axes.titlesize": 11, "axes.titleweight": "bold", "axes.titlelocation": "left",
+    "font.family": "sans-serif", "font.sans-serif": pf.FONT_SANS, "font.monospace": pf.FONT_MONO,
+    "font.size": 10, "text.color": pf.INK, "axes.titlecolor": pf.INK, "axes.titlesize": 11, "axes.titleweight": "bold", "axes.titlelocation": "left",
     "axes.edgecolor": pf.INK2, "axes.labelcolor": pf.INK2, "xtick.color": pf.INK2, "ytick.color": pf.INK2,
     "axes.spines.top": False, "axes.spines.right": False, "axes.grid": True, "axes.axisbelow": True,
     "grid.color": pf.GRID, "grid.linewidth": 0.8, "figure.dpi": 110, "savefig.dpi": 300,
@@ -106,12 +108,12 @@ def sankey_html(flows: pd.DataFrame, path: Path, top: int = 25, title: str = "")
     dst = [f"{c} (recipient)" for c in f["Recipient country"]]
     nodes = list(dict.fromkeys(src + dst))
     idx = {n: i for i, n in enumerate(nodes)}
-    link_col = ["rgba(154,152,144,0.35)" if dom else "rgba(235,104,52,0.55)" for dom in f["domestic"]]
+    link_col = ["rgba(154,152,144,0.35)" if dom else "rgba(201,128,0,0.6)" for dom in f["domestic"]]
     fig = go.Figure(go.Sankey(
         node=dict(label=nodes, pad=12, thickness=12, color=[pf.PALETTE[0]] * len(nodes)),
         link=dict(source=[idx[s] for s in src], target=[idx[t] for t in dst],
                   value=(f["usd_frac"] / 1e6).round(2), color=link_col,
                   hovertemplate="%{source.label} → %{target.label}: USD %{value:.1f}M<extra></extra>")))
-    fig.update_layout(title=title, font=dict(size=12), height=700, margin=dict(l=10, r=10, t=50, b=10))
+    fig.update_layout(title=title, font=dict(family="Inter, Helvetica Neue, Arial, sans-serif", size=12, color=pf.INK), height=700, margin=dict(l=10, r=10, t=50, b=10))
     fig.write_html(str(path), include_plotlyjs="cdn")
     return f

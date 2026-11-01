@@ -32,10 +32,15 @@ TOPIC_LABELS = {
 GENDER_LABELS = {"Male": "Male only", "Female": "Female only",
                  "Female;Male": "Mixed", "Male;Female": "Mixed"}
 
-# Validated categorical palette (fixed order; dataviz reference palette, light mode)
-PALETTE = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300"]
-NEUTRAL = "#9a9890"
-INK, INK2, GRID = "#0b0b0b", "#52514e", "#e4e3df"
+# CognosX brand palette (github.com/cognosx/brand): categorical, fixed order, amber first;
+# validated for colour-vision deficiency on white. Do not reorder or cycle.
+PALETTE = ["#C98000", "#2F64B5", "#C24A2E", "#0E9A7E", "#8A4FB0"]
+NEUTRAL = "#9a9890"                      # "other", totals, context
+PARTIAL = "#f6cf85"                      # light amber for the partial year (2023)
+INK, INK2, GRID = "#141414", "#5c5c5c", "#e6e3dd"
+AMBER_INK = "#9a5b00"                    # accent text on white
+FONT_SANS = ["Inter", "Helvetica Neue", "Arial", "DejaVu Sans"]
+FONT_MONO = ["IBM Plex Mono", "DejaVu Sans Mono"]
 
 
 def load(path: str | Path) -> pd.DataFrame:
