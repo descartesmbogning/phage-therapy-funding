@@ -104,6 +104,9 @@ On a laptop the whole run takes about 10 minutes.
 8. **EU funders (v1.1).** The European Commission and the ERC (23 grants) were coded as funder country Belgium. They are now "European Union".
 9. **Engagement plots (v1.2).** In the old notebooks the "Fund to female" plot reused the male data, several topic × gender sections read the full dataset, and plots used the row index for years with gaps for zero counts. Figures S8–S9 fix all three. Details in `docs/notebook_inventory.md`.
 
+## Figure style
+Figures use the CognosX palette and type ([github.com/cognosx/brand](https://github.com/cognosx/brand)), set in `src/phagefund.py` (`PALETTE`, `INK`, `GRID`, fonts) and `src/figures.py` (`STYLE`, `SEQ`). Change them there to restyle every figure. Figures have no logo, for journal use.
+
 ## Limitations to keep in mind
 - **Coverage.** Dimensions covers NIH, European and Japanese funders well but many low- and middle-income country funders poorly.
 - **Amounts.** All amounts are nominal USD.
