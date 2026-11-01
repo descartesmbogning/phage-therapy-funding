@@ -48,7 +48,7 @@ def load(path: str | Path) -> pd.DataFrame:
     d = pd.read_csv(path)
     d = d[(d[YEAR] >= 1999) & (d[YEAR] <= 2023)].copy()
     d["topic"] = d[TOPIC].map(TOPIC_LABELS).fillna("Unclassified")
-    d["team_gender"] = d[GENDER].map(GENDER_LABELS).fillna("No named researcher")
+    d["team_gender"] = d[GENDER].map(GENDER_LABELS).fillna("Gender unknown")
     if "n_researchers" not in d:
         d["n_researchers"] = d["Researchers"].apply(_count_people)
     return d
@@ -159,7 +159,7 @@ def top_recipients(d: pd.DataFrame, n: int = 10) -> pd.DataFrame:
 
 # ---------------------------------------------------------------- gender
 def gender_table(d: pd.DataFrame) -> pd.DataFrame:
-    order = ["Male only", "Female only", "Mixed", "No named researcher"]
+    order = ["Male only", "Female only", "Mixed", "Gender unknown"]
     g = d.groupby("team_gender")
     out = pd.DataFrame({
         "Grants": g.size(),
@@ -479,3 +479,18 @@ def without_funder(d: pd.DataFrame, funder: str = NIAID) -> pd.DataFrame:
                      "Funder HHI": hhi(x.groupby(FUNDER)[USD].sum()),
                      "Funder-country HHI": hhi(x.groupby("Funder Country")[USD].sum())})
     return pd.DataFrame(rows).set_index("Sample")
+
+
+# ---------------------------------------------------------------- display
+_ACRONYMS = {"Nci": "NCI", "Nih": "NIH", "Usa": "USA", "Uk": "UK", "Inserm": "INSERM", "Cnrs": "CNRS"}
+
+
+def tidy_name(name: str) -> str:
+    """Display-only clean-up of Dimensions title case ("University Of Montana" -> "University of Montana").
+
+    The underlying names are not changed, so joins and counts are unaffected.
+    """
+    words = str(name).split(" ")
+    small = {"Of", "And", "For", "The", "In", "At", "De", "Da", "Du", "Des", "La", "Le"}
+    out = [w.lower() if i > 0 and w in small else _ACRONYMS.get(w, w) for i, w in enumerate(words)]
+    return " ".join(out)

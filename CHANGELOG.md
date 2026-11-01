@@ -7,7 +7,14 @@
   - Inter for text; ink `#141414`, axis text `#5c5c5c`, grid `#e6e3dd`.
 - Figures carry no logo or credit line, so they stay suitable for journals.
 - Captions that named colours were updated (Figures S10, S11). Labels on amber bars are dark for contrast (Figure 2).
-- No numbers changed: every table and `key_numbers.json` is byte-identical after the re-run.
+- No numbers changed by the restyle: every table and `key_numbers.json` is byte-identical after the re-run.
+- **Output review (same release).** A clean rebuild from the raw data (all outputs deleted, `run_all.sh`) reproduced every table, the analysis table and the topic assignments byte for byte, and every figure and table is written by a notebook cell. The review then fixed:
+  - Two key numbers were computed from already-rounded table values. The LMIC + low-income share is now 0.33% (was 0.34%), and China's share of Global South funding is 73.1% (was 73.2%). Table S11 totals now use unrounded values.
+  - The Figure 3 caption had hard-coded numbers (59 grants, USD 39.8M). It is now computed: 60 grants, USD 40.7M.
+  - The group "No named researcher" is renamed "Gender unknown", because one of its 60 grants lists two researchers whose gender could not be inferred (Table 4, Table S20, Figures 3 and S7).
+  - Labels: dark text on amber in Figure S7. The Figure 2 x-axis label now says the shares are of funding, the caption gives the small antibiotic-resistance shares (3%, 5%), and the empty "Unclassified" legend entry is removed. The Figure 5c title matches its axis (USD million), and the Figure 5a periods use en dashes. Funder labels in Figures S2–S3 now name the country (e.g. "National Science Center, Poland"). Figure 4's country panel says "fractional". Figure S1 now uses the shared figure style.
+  - Tables: counts are written as integers (Table 1, S11). Float noise is removed (S8, S11, S23). S23 has readable column names. Table 2b shows tidied institution names ("University of Montana", "NCI"); this is display only, the data are unchanged.
+  - `docs/methods.md` now states the domestic rule's alternative (fractional: 91.4%) and how the top 10% of institutions is counted (52 of 525).
 
 ## v1.3 (31 Oct 2026)
 - **Privacy.** The two notebooks in `archive/2024_colab/` were stripped of their saved outputs (researcher names with inferred gender, grant titles and abstracts); their code is unchanged. The git history was rewritten so that older commits no longer contain those outputs.

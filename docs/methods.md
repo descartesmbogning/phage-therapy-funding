@@ -33,13 +33,13 @@
 
 ## 4. Analysis (notebook 03)
 - **Growth.** A log-linear fit of yearly counts and USD totals over 1999–2022, reported as % per year with a 95% CI. 2023 is excluded from the fit because of indexing lag.
-- **Domestic vs cross-border.** A grant is domestic when every recipient institution is in the funder's country (Table S12).
+- **Domestic vs cross-border.** A grant is domestic when every recipient institution is in the funder's country (Table S12). By this whole-grant rule, 88.7% of funding is domestic. Splitting multi-country grants fractionally instead (1/*k* per institution) gives 91.4%, because 30 of the 65 cross-border grants also include a recipient in the funder's country.
 - **Fractional counting.**
   - A grant with *k* recipient institutions gives 1/*k* of its amount to each one.
   - That share goes to the institution's country and income group.
   - Each grant has one funder.
 - **Gender.**
-  - Grants are put into exclusive groups by the genders of their named researchers: male only, female only, mixed, and no named researcher.
+  - Grants are put into exclusive groups by the genders of their named researchers: male only, female only, mixed, and gender unknown. "Gender unknown" covers 59 grants that list no researcher and 1 grant whose researchers' gender could not be inferred (labelled "no named researcher" before v1.4).
   - Groups are compared with Mann-Whitney tests.
   - An OLS model of log(amount) on group, log team size, US funder and start year is also fitted, with HC1 robust errors.
 - **Engagement types.** Same rules as the patent study.
@@ -54,7 +54,7 @@
 ## 5. Concentration, collaboration and sensitivity (notebook 05, v1.3)
 - **Concentration.**
   - Herfindahl-Hirschman index (HHI): the sum of squared percentage shares of funding, on a 0–10,000 scale. It is computed for funders, funder countries, and recipient countries (fractional counting). By the usual convention, above 2,500 is highly concentrated and 1,500–2,500 moderately concentrated.
-  - Gini coefficient and the share of funding received by the top 10% of recipient institutions (fractional counting).
+  - Gini coefficient and the share of funding received by the top 10% of recipient institutions (fractional counting). With 525 institutions, the top 10% is the 52 largest (10% rounded to the nearest whole institution); the 53 largest would receive 54.0%.
   - Shares of funding from US funders and from NIAID, for 1999–2008, 2009–2015 and 2016–2023 (by grant start year).
 - **Collaboration.** Counts only, with no names: grants with more than one recipient institution, more than one recipient country, both Global North and Global South recipients; co-investigator pairs and pairs that share two or more grants.
 - **Without NIAID.** Growth rates, the US share and the HHIs are re-estimated with NIAID grants removed.

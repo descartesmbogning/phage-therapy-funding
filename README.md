@@ -13,8 +13,8 @@ The method follows the phage therapy patent landscape study by Mbogning Fonkou &
 | Funding from high-income countries | 98.3% | Fig. 4, Table 5 |
 | Funding received by high-income countries | 97.8% | Fig. 4, Table 5 |
 | Funding received by the Global South (73% of it by China) | 2.1% | Tables S4, S11 |
-| Funding received by lower-middle and low-income countries | 0.34% | Fig. 4, Table 5 |
-| Funding that stays in the funder's own country | 88.7% | Table S12 |
+| Funding received by lower-middle and low-income countries | 0.33% | Fig. 4, Table 5 |
+| Funding in grants whose recipients are all in the funder's country | 88.7% | Table S12 |
 | Share of funding from NIAID | 21.0% | Table 2a |
 | Female-only vs male-only grant size (adjusted) | −27% (95% CI −43 to −8) | Fig. 3, Table S3 |
 | Share of funding from US funders (NIAID: 14% → 17% → 23% across three periods) | 47.7% | Fig. 5, Tables S24–S25 |
