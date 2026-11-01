@@ -14,6 +14,9 @@
   - The group "No named researcher" is renamed "Gender unknown", because one of its 60 grants lists two researchers whose gender could not be inferred (Table 4, Table S20, Figures 3 and S7).
   - Labels: dark text on amber in Figure S7. The Figure 2 x-axis label now says the shares are of funding, the caption gives the small antibiotic-resistance shares (3%, 5%), and the empty "Unclassified" legend entry is removed. The Figure 5c title matches its axis (USD million), and the Figure 5a periods use en dashes. Funder labels in Figures S2–S3 now name the country (e.g. "National Science Center, Poland"). Figure 4's country panel says "fractional". Figure S1 now uses the shared figure style.
   - Tables: counts are written as integers (Table 1, S11). Float noise is removed (S8, S11, S23). S23 has readable column names. Table 2b shows tidied institution names ("University of Montana", "NCI"); this is display only, the data are unchanged.
+  - Figure 1 title now states the fitted growth (about 12% a year for grants, 17% for funding) instead of "grew steadily", since yearly funding is uneven. The title is computed from Table S2.
+  - Figure S2 caption notes that Dimensions credits NSF SBIR/STTR and I-Corps awards to the Directorate for Technology, Innovation and Partnerships (created 2022), including earlier awards. All 13 grants under that name are from these programmes.
+  - LICENSE: copyright line updated to "2025–2026 Maxime Descartes Mbogning Fonkou".
   - `docs/methods.md` now states the domestic rule's alternative (fractional: 91.4%) and how the top 10% of institutions is counted (52 of 525).
 
 ## v1.3 (31 Oct 2026)
