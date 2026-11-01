@@ -1,41 +1,48 @@
-country,north_south,income_group,note,source
-Australia,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Austria,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Belgium,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Brazil,Global South,Upper middle income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Canada,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-China,Global South,Upper middle income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Czechia,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Denmark,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-European Union,Global North,High income,"Supranational funder (European Commission, ERC); was coded as Belgium",World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Finland,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-France,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Georgia,Global North,Upper middle income,North/South label kept as in source; classifications differ for this country,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Germany,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Greece,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Hungary,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-India,Global South,Lower middle income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Ireland,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Israel,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Italy,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Japan,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Latvia,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Netherlands,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-New Zealand,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Norway,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Poland,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Portugal,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Russia,Global North,Upper middle income,North/South label kept as in source; classifications differ for this country,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Singapore,Global South,High income,North/South label kept as in source; classifications differ for this country,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Slovakia,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-South Africa,Global South,Upper middle income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Spain,Global North,High income,Corrected 31 Oct 2026: recipient file had Global South / Upper middle income (data entry error),World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Sweden,Global North,High income,Corrected 31 Oct 2026: recipient file had Global South / Upper middle income (data entry error),World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Switzerland,Global North,High income,Corrected 31 Oct 2026: recipient file had Global South / Upper middle income (data entry error),World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Taiwan,Global North,High income,North/South was blank; set to Global North,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Tanzania,Global South,Lower middle income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Thailand,Global South,Upper middle income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Uganda,Global South,Low income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-Ukraine,Global North,Lower middle income,North/South label kept as in source; classifications differ for this country,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-United Kingdom,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
-United States,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024
+country,north_south,income_group,note,source,oecd_dac_2024
+Argentina,Global South,Upper middle income,Added v1.5 for grants without an amount,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,ODA recipient
+Australia,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Austria,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Belgium,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Brazil,Global South,Upper middle income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,ODA recipient
+Canada,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+China,Global South,Upper middle income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,ODA recipient
+Czechia,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Denmark,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+European Union,Global North,High income,"Supranational funder (European Commission, ERC); was coded as Belgium",World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Finland,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+France,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Georgia,Global North,Upper middle income,North/South label kept as in source; classifications differ for this country,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,ODA recipient
+Germany,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Ghana,Global South,Lower middle income,Added v1.5 for grants without an amount,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,ODA recipient
+Greece,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Hungary,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+India,Global South,Lower middle income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,ODA recipient
+Ireland,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Israel,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Italy,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Japan,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Latvia,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Malaysia,Global South,Upper middle income,Added v1.5 for grants without an amount,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,ODA recipient
+Netherlands,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+New Zealand,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Norway,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Pakistan,Global South,Lower middle income,Added v1.5 for grants without an amount,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,ODA recipient
+Poland,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Portugal,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Qatar,Global South,High income,Added v1.5 for grants without an amount; North/South label differs between sources,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Russia,Global North,Upper middle income,North/South label kept as in source; classifications differ for this country,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Singapore,Global South,High income,North/South label kept as in source; classifications differ for this country,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Slovakia,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Slovenia,Global North,High income,Added v1.5 for grants without an amount,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+South Africa,Global South,Upper middle income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,ODA recipient
+Spain,Global North,High income,Corrected 31 Oct 2026: recipient file had Global South / Upper middle income (data entry error),World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Sweden,Global North,High income,Corrected 31 Oct 2026: recipient file had Global South / Upper middle income (data entry error),World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Switzerland,Global North,High income,Corrected 31 Oct 2026: recipient file had Global South / Upper middle income (data entry error),World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Taiwan,Global North,High income,North/South was blank; set to Global North,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Tanzania,Global South,Lower middle income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,ODA recipient
+Thailand,Global South,Upper middle income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,ODA recipient
+Uganda,Global South,Low income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,ODA recipient
+Ukraine,Global North,Lower middle income,North/South label kept as in source; classifications differ for this country,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,ODA recipient
+United Kingdom,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+United States,Global North,High income,,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,Not ODA recipient
+Vietnam,Global South,Lower middle income,Added v1.5 for grants without an amount,World Bank income groups FY2024 (July 2023); Global North/South from World Population Review 2024,ODA recipient

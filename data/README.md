@@ -4,6 +4,7 @@ None of the files below are in the repository. Dimensions terms of use do not al
 
 | File | Rows | Content | How to obtain |
 |---|---|---|---|
+| `raw/dimensions_export_2024-02-13.xlsx` | 1,521 | The original Dimensions export with the screening columns `includes ?` (1 relevant, 0 or −1 not) and `funding?` ("no fund" = no amount). Used by notebook 06 | Run the query in `docs/methods.md`, or ask the authors |
 | `raw/grants_screened.xlsx` | 818 | Dimensions grants after screening and hand enrichment (funder income group and North/South added) | Run the query in `docs/methods.md` (Dimensions subscription), or ask the authors |
 | `raw/grants_screened_v1_topics.xlsx` | 818 | Earlier version of the same table, used for the 2024 LDA run | As above |
 | `raw/receiver_metadata.xlsx` | 535 | One row per recipient institution: country, region, type, World Bank income group (2023), Global North/South | Authors (it contains no personal data and can be shared on request) |
@@ -23,4 +24,14 @@ None of the files below are in the repository. Dimensions terms of use do not al
 | No funding amount | 312 | 818 |
 | Start year outside 1999–2023 | 16 | 802 |
 
-A log with one row per excluded record and the reason (Grant ID, decision, reason) is still to be added.
+The counts above are regenerated from the export's screening columns by `06_robustness.ipynb` (Table S30, Figure S12). The record-level screening decisions stay in the private export.
+
+## Private worksheets written by notebook 06 (`data/interim/`, never committed)
+| File | Purpose | When filled, save as |
+|---|---|---|
+| `amount_recovery_worksheet.xlsx` | 272 grants without an amount, research grants first, with the funder's page | `raw/recovered_amounts.csv` (columns `Grant ID`, `recovered_usd`) |
+| `validation_screening_sample.xlsx` | Stratified 15% of the 1,521 records for a second screener | `raw/validation_screening.xlsx` |
+| `validation_topics_sample.xlsx` | 100 grants (25 per topic) to hand-code | `raw/validation_topics.xlsx` |
+| `validation_gender_sample.xlsx` | 100 researcher names stratified by country to check | `raw/validation_gender.xlsx` |
+| `topic_probabilities_rerun.csv` | Topic probabilities from the refitted LDA (notebook 02) | (generated) |
+

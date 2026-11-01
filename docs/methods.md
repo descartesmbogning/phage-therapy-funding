@@ -41,7 +41,7 @@
 - **Gender.**
   - Grants are put into exclusive groups by the genders of their named researchers: male only, female only, mixed, and gender unknown. "Gender unknown" covers 59 grants that list no researcher and 1 grant whose researchers' gender could not be inferred (labelled "no named researcher" before v1.4).
   - Groups are compared with Mann-Whitney tests.
-  - An OLS model of log(amount) on group, log team size, US funder and start year is also fitted, with HC1 robust errors.
+  - Main model (v1.5): OLS of log(amount) on group, log team size, log grant length (years), start year, funder (funders with fewer than 10 grants pooled) and topic, with HC1 robust errors. The model also reports the amount per year of grant, and the v1.0–v1.4 model (team size, US funder, start year) for comparison (Table S3).
 - **Engagement types.** Same rules as the patent study.
   - An entity is labelled in each year it is active:
     - **Newcomer:** not active before, active later, or first seen in 2023.
@@ -60,3 +60,25 @@
 - **Without NIAID.** Growth rates, the US share and the HHIs are re-estimated with NIAID grants removed.
 - **Constant dollars.** Amounts are converted to 2023 USD with the annual average CPI-U (all items, U.S. city average, 1982–84 = 100), by grant start year (`data/reference/cpi_u_annual.csv`). 1999–2021 come from the BLS CPI-U historical table; 2022 (292.655) and 2023 (304.702) from BLS data as published by the Idaho Department of Labor. Dimensions had already converted other currencies to USD, so only US inflation is removed.
 - **Corrections log.** The values quoted in the July 2025 draft are typed into `data/reference/draft_2025_values.csv` with the cause of each error and its fix; the corrected values are read from the repo outputs (Table S29, Figure S11).
+
+## 6. Robustness (notebook 06, v1.5)
+- **Screening flow.** Counts for every step are read from the screening columns of the raw Dimensions export (`includes ?`, `funding?`), so the flow diagram is generated, not typed (Figure S12, Table S30). Five records are coded −1 in `includes ?`; they are excluded with the 386 coded 0.
+- **Award types.** Each record is classed as a research grant, a training award (studentship, scholarship, fellowship, thesis, graduate-programme record) or capacity funding (USDA formula funds) from its programme name and source link (`src/robustness.py`, `award_type`). 43% of the grants without an amount are training awards, against 8% of grants with one (Table S31).
+- **Grants without an amount.** The 272 relevant grants with no amount (start year 1999–2023) enter three checks:
+  - count-based shares, each grant counted once and split equally across its recipient countries (Table S32);
+  - imputation: each missing amount takes the median (central), 25th percentile (low) or 75th percentile (high) of priced grants from the same funder (at least 3), else the same funder country and award type, else the same award type. Training awards are set to 0 in the low and central scenarios and to the 25th percentile of priced training awards in the high scenario (Table S33);
+  - recovery: a private worksheet lists each grant with its funder page; amounts entered by hand in `data/raw/recovered_amounts.csv` are used when present.
+
+  The recipient countries of these grants come from the Dimensions export, with spelling cleaned. Seven countries not in the reference table were added (World Bank FY2024 income group; Qatar's North/South label differs between sources).
+- **Projects.** Records with the same funder and the same English (translated) title whose years follow on are merged into one project, with amounts summed (Table S34). Using the translated title stops grants with non-Latin titles from being merged by mistake.
+- **Other definitions.**
+  - Amounts spread evenly over grant years.
+  - Income group at grant start: China lower-middle income until 2009 and Thailand until 2010. These years were entered by hand and should be checked against the World Bank historical classification (OGHIST).
+  - OECD DAC list of ODA recipients (2024–25) as an alternative to Global South.
+  - Engagement: the share of researchers with one active year among those first seen 2001–2019, and the share with a single grant.
+  - Topic shares from the refitted model's topic probabilities (Table S36).
+  - The gender model without funders in Japan and China (name inference is less reliable there) and without training awards (Table S35).
+- **Validation and cross-checks (to complete).**
+  - The notebook writes private samples for a second screener (15% of 1,521, stratified), hand-coding of topics (100 grants) and checking of inferred gender (100 names, stratified by country), and reports Cohen's kappa once they are filled.
+  - Public templates hold yearly NIH totals for comparison with NIH RePORTER and World Bank price level ratios for a PPP check.
+- **Summary.** Figure S13 and Table S37 show each headline under each check, with the rule used to judge whether its conclusion holds.
