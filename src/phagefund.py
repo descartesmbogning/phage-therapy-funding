@@ -173,32 +173,57 @@ def gender_table(d: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
-def gender_tests(d: pd.DataFrame) -> pd.DataFrame:
-    """Mann-Whitney tests and a log-amount regression with controls."""
+GENDER_MODELS = {
+    # name: (outcome, right-hand side). v1.5: the main model adds funder, grant length and topic,
+    # because female-only teams are not spread evenly across funders and grant lengths.
+    "Main: team size, grant length, start year, funder, topic":
+        ("log_usd", "log_team + log_years + Q('Start Year') + C(funder_grp) + C(topic)"),
+    "Amount per year of grant (team size, start year, funder, topic)":
+        ("log_usd_per_year", "log_team + Q('Start Year') + C(funder_grp) + C(topic)"),
+    "Without funder, length or topic (v1.0-v1.4 model)":
+        ("log_usd", "log_team + us_funder + Q('Start Year')"),
+}
+
+
+def gender_frame(d: pd.DataFrame, min_funder_grants: int = 10) -> pd.DataFrame:
+    e = d[d["team_gender"].isin(["Male only", "Female only", "Mixed"])].copy()
+    years = (e["End Year"].fillna(e[YEAR]) - e[YEAR] + 1).clip(lower=1)
+    e["log_usd"] = np.log(e[USD])
+    e["log_years"] = np.log(years)
+    e["log_usd_per_year"] = np.log(e[USD] / years)
+    e["us_funder"] = e["Funder Country"].astype(str).str.contains("United States").astype(int)
+    e["log_team"] = np.log(e["n_researchers"].clip(lower=1))
+    counts = e[FUNDER].map(e[FUNDER].value_counts())
+    e["funder_grp"] = e[FUNDER].where(counts >= min_funder_grants, "Other funders")
+    e["g"] = pd.Categorical(e["team_gender"], ["Male only", "Female only", "Mixed"])
+    return e
+
+
+def gender_tests(d: pd.DataFrame, models: dict | None = None) -> pd.DataFrame:
+    """Mann-Whitney tests and log-amount regressions (robust HC1 errors), one row per comparison and model.
+
+    Funders with fewer than 10 analysed grants are pooled as "Other funders".
+    """
     from scipy import stats
     import statsmodels.formula.api as smf
 
-    e = d[d["team_gender"].isin(["Male only", "Female only", "Mixed"])].copy()
-    e["log_usd"] = np.log(e[USD])
-    e["us_funder"] = e["Funder Country"].astype(str).str.contains("United States").astype(int)
-    e["log_team"] = np.log(e["n_researchers"].clip(lower=1))
-    e["g"] = pd.Categorical(e["team_gender"], ["Male only", "Female only", "Mixed"])
-    m = smf.ols("log_usd ~ C(g) + log_team + us_funder + Q('Start Year')", data=e).fit(cov_type="HC1")
+    e = gender_frame(d)
     male = e.loc[e.team_gender == "Male only", USD]
     rows = []
-    for grp in ["Female only", "Mixed"]:
-        key = f"C(g)[T.{grp}]"
-        rows.append({
-            "Comparison": f"{grp} vs Male only",
-            "Mann-Whitney p": stats.mannwhitneyu(e.loc[e.team_gender == grp, USD], male).pvalue,
-            "Adjusted difference (%)": (np.exp(m.params[key]) - 1) * 100,
-            "95% CI low (%)": (np.exp(m.conf_int().loc[key, 0]) - 1) * 100,
-            "95% CI high (%)": (np.exp(m.conf_int().loc[key, 1]) - 1) * 100,
-            "Regression p": m.pvalues[key],
-        })
+    for name, (y, rhs) in (models or GENDER_MODELS).items():
+        m = smf.ols(f"{y} ~ C(g) + {rhs}", data=e).fit(cov_type="HC1")
+        for grp in ["Female only", "Mixed"]:
+            key = f"C(g)[T.{grp}]"
+            rows.append({
+                "Comparison": f"{grp} vs Male only", "Model": name,
+                "Mann-Whitney p": stats.mannwhitneyu(e.loc[e.team_gender == grp, USD], male).pvalue,
+                "Adjusted difference (%)": (np.exp(m.params[key]) - 1) * 100,
+                "95% CI low (%)": (np.exp(m.conf_int().loc[key, 0]) - 1) * 100,
+                "95% CI high (%)": (np.exp(m.conf_int().loc[key, 1]) - 1) * 100,
+                "Regression p": m.pvalues[key], "N": int(m.nobs),
+            })
     out = pd.DataFrame(rows).set_index("Comparison").round(3)
-    out.attrs["n"] = int(m.nobs)
-    out.attrs["controls"] = "log team size, US funder, start year; robust (HC1) errors"
+    out.attrs["controls"] = "see Model; funders with < 10 grants pooled; robust (HC1) errors"
     return out
 
 

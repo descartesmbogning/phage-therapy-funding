@@ -1,5 +1,29 @@
 # Changelog
 
+## v1.5 (1 Nov 2026)
+Robustness of the results to missing amounts, record structure and definitions. New notebook `06_robustness.ipynb` and module `src/robustness.py`; Figures S12–S13; Tables S30–S37.
+- **Grants without an amount.** The original Dimensions export (1,521 records) reconciles exactly with the pipeline (1,521 → 1,130 → 818 → 802). Of 272 relevant grants (1999–2023) without an amount, 43% are training awards. Most come from Brazil, Russia and Belgium.
+  - Counting grants, the Global South receives 17.5% of all 1,074 grants (11.8% of the 802 priced ones).
+  - With imputed amounts it receives 2.6–5.5% of funding (2.1% recorded).
+  - Low and lower-middle income countries stay at 0.3–0.6% of funding and 1.4% of grants.
+  - Growth, the US share (41–48%) and NIAID's lead (17–21%) hold.
+- **Gender model.** Now controls for funder, grant length and topic (Table S3). The female-only gap is −19% (95% CI −32 to −2; was −27%). It holds without funders in Japan and China (−21%), without training awards (−20%) and per grant-year (−22%). The mixed-team advantage disappears.
+- **Projects.** 25 projects were split into yearly records (802 records → 771 projects). Counts and engagement change by less than 1 point.
+- **Engagement.** "Transient" depends on the activity rule (82% start-year rule, 3.5% full-span rule). Report instead the share of researchers with a single grant: 83.9%.
+- **Topics.** The refitted LDA agrees with the 2024 assignment for 59% of grants. The rise of antibiotic-resistance research holds (+23 to +33 points from 1999–2005 to 2016–2023), but its 2016–2023 level ranges from 26% to 44% of funding (Table S36).
+- **Other checks.**
+  - Amounts spread over grant years: 17.1%/yr growth.
+  - Income group at grant start: 0.46% to low and lower-middle income countries.
+  - OECD DAC list: 2.2% to ODA recipients.
+  - 3 of 40 checks change a conclusion (Figure S13): counting grants for the two Global South measures, and the full-span engagement rule.
+- **To complete by hand** (worksheets and templates in place; the notebook uses them once filled):
+  - recovering amounts from funder websites;
+  - second screening, topic and gender validation samples;
+  - NIH RePORTER totals;
+  - PPP price levels;
+  - checking the China and Thailand income-group transition years.
+- `run_all.sh` runs notebook 06. `data/reference/country_classification.csv` gains 7 countries and an `oecd_dac_2024` column. Notebook 02 also writes the refit's topic probabilities.
+
 ## v1.4 (31 Oct 2026)
 - **Figure style.** All figures now use the CognosX brand palette and type from [github.com/cognosx/brand](https://github.com/cognosx/brand):
   - categorical colours in fixed order: amber `#C98000`, blue `#2F64B5`, brick `#C24A2E`, teal `#0E9A7E`, violet `#8A4FB0` (checked for colour-vision deficiency);

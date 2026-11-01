@@ -16,7 +16,10 @@ The method follows the phage therapy patent landscape study by Mbogning Fonkou &
 | Funding received by lower-middle and low-income countries | 0.33% | Fig. 4, Table 5 |
 | Funding in grants whose recipients are all in the funder's country | 88.7% | Table S12 |
 | Share of funding from NIAID | 21.0% | Table 2a |
-| Female-only vs male-only grant size (adjusted) | −27% (95% CI −43 to −8) | Fig. 3, Table S3 |
+| Female-only vs male-only grant size (adjusted for team size, grant length, year, funder and topic) | −19% (95% CI −32 to −2) | Fig. 3, Tables S3, S35 |
+| Researchers who held only one grant | 83.9% | Tables S7, S37 |
+| Global South share if grants without an amount are imputed (low–high) | 2.6–5.5% of funding | Table S33 |
+| Global South share counting grants, all 1,074 relevant grants | 17.5% of grants | Table S32 |
 | Share of funding from US funders (NIAID: 14% → 17% → 23% across three periods) | 47.7% | Fig. 5, Tables S24–S25 |
 | Concentration across funder countries (HHI, 0–10,000) | 2,501 (highly concentrated) | Table S24 |
 | Funding received by the top 10% of recipient institutions | 53.4% (Gini 0.68) | Fig. 5, Table S24 |
@@ -31,19 +34,23 @@ The method follows the phage therapy patent landscape study by Mbogning Fonkou &
 │   ├── 02_topic_modelling.ipynb   LDA topics, coherence curve, seed stability
 │   ├── 03_main_analysis.ipynb     every figure and table in the paper
 │   ├── 04_supplementary_figures.ipynb   Figures S2–S10 from the 2024–25 notebooks, redrawn
-│   └── 05_concentration_and_sensitivity.ipynb   Figure 5, Figure S11, Tables S24–S29
+│   ├── 05_concentration_and_sensitivity.ipynb   Figure 5, Figure S11, Tables S24–S29
+│   └── 06_robustness.ipynb        missing amounts, projects, alternative definitions: Figures S12–S13, Tables S30–S37
 ├── src/
 │   ├── preprocess.py              joins grants, institution metadata, gender and topics
 │   ├── topics.py                  text cleaning, LDA, coherence, stability
 │   ├── phagefund.py               growth, fractional counting, gender tests, engagement types
+│   ├── robustness.py              award types, grants without an amount, imputation, projects (v1.5)
 │   └── figures.py                 reusable plotting blocks (heatmap, engagement lines, dendrogram, Sankey)
 ├── outputs/
-│   ├── figures/                   Fig1–Fig5, FigS1–S9, FigS11 (PNG 300 dpi and PDF), FigS10 (HTML)
-│   └── tables/                    Tables 1–5, S1–S29, key_numbers.json
+│   ├── figures/                   Fig1–Fig5, FigS1–S9, FigS11–S13 (PNG 300 dpi and PDF), FigS10 (HTML)
+│   └── tables/                    Tables 1–5, S1–S37, key_numbers.json
 ├── data/
 │   ├── reference/country_classification.csv   public: country income group and North/South
 │   ├── reference/cpi_u_annual.csv             public: CPI-U annual averages 1999–2023
 │   ├── reference/draft_2025_values.csv        public: values quoted in the July 2025 draft
+│   ├── reference/nih_reporter_crosscheck.csv  public: yearly NIH totals, column to fill from NIH RePORTER
+│   ├── reference/ppp_price_level_2023.csv     public: column to fill with World Bank price level ratios
 │   └── raw/, interim/, processed/             private, not in the repository (data/README.md)
 ├── docs/methods.md                search query and methods in full
 ├── docs/notebook_inventory.md     what each 2024–25 Colab notebook did, and what was kept
@@ -59,7 +66,7 @@ conda activate phagefund
 # put the input files in data/raw/ (see data/README.md)
 ./run_all.sh
 ```
-`run_all.sh` runs the notebooks in this order: 02 (topics), 01 (table), 03 (results), 04 (supplementary figures), 05 (concentration and sensitivity).
+`run_all.sh` runs the notebooks in this order: 02 (topics), 01 (table), 03 (results), 04 (supplementary figures), 05 (concentration and sensitivity), 06 (robustness).
 On a laptop the whole run takes about 10 minutes.
 
 ## Figure and table map
@@ -92,6 +99,14 @@ On a laptop the whole run takes about 10 minutes.
 | Table S27: growth and concentration without NIAID | 05 | `S27_without_niaid.csv` |
 | Table S28: growth in constant 2023 USD | 05 | `S28_real_growth.csv` |
 | Figure S11, Table S29: draft vs corrected values | 05 | `FigS11_corrections`, `S29_corrections_log.csv` |
+| Figure S12, Table S30: screening flow | 06 | `FigS12_screening_flow`, `S30_screening_flow.csv` |
+| Table S31: award types, grants with and without an amount | 06 | `S31_award_types.csv` |
+| Table S32: count-based shares including grants without an amount | 06 | `S32_count_based_shares.csv` |
+| Table S33: dollar shares with imputed or recovered amounts | 06 | `S33_imputed_amount_scenarios.csv` |
+| Table S34: yearly records merged into projects | 06 | `S34_projects.csv` |
+| Table S35: gender gap in subsets | 06 | `S35_gender_subsets.csv` |
+| Table S36: topic shares from topic probabilities | 06 | `S36_topic_probability_shares.csv` |
+| Figure S13, Table S37: robustness summary | 06 | `FigS13_robustness`, `S37_robustness_summary.csv` |
 
 ## Corrections compared with the 2024–25 Colab notebooks
 1. **Growth rate.** Now computed on USD amounts with a log-linear fit. The old CAGR used original-currency amounts and 25 intervals instead of 24.
@@ -103,15 +118,19 @@ On a laptop the whole run takes about 10 minutes.
 7. **Country labels (v1.1).** The hand-made recipient file labelled Switzerland, Sweden and Spain as "Global South / Upper middle income". Labels now come from one reference table for funders and recipients. Global South recipients: 6.7% → 2.1% of funding.
 8. **EU funders (v1.1).** The European Commission and the ERC (23 grants) were coded as funder country Belgium. They are now "European Union".
 9. **Engagement plots (v1.2).** In the old notebooks the "Fund to female" plot reused the male data, several topic × gender sections read the full dataset, and plots used the row index for years with gaps for zero counts. Figures S8–S9 fix all three. Details in `docs/notebook_inventory.md`.
+10. **Gender model (v1.5).** The main model now controls for funder, grant length and topic. The female-only gap is −19% (was −27%). The mixed-team advantage (+58%) disappears (−7%, not significant): it reflected which funders fund mixed teams and for how long.
+11. **Grants without an amount (v1.5).** 272 relevant grants (1999–2023) have no amount in Dimensions; 43% are training awards (studentships, scholarships, theses). They are now used in count-based checks and imputation scenarios (Tables S31–S33).
 
 ## Figure style
 Figures use the CognosX palette and type ([github.com/cognosx/brand](https://github.com/cognosx/brand)), set in `src/phagefund.py` (`PALETTE`, `INK`, `GRID`, fonts) and `src/figures.py` (`STYLE`, `SEQ`). Change them there to restyle every figure. Figures have no logo, for journal use.
 
 ## Limitations to keep in mind
 - **Coverage.** Dimensions covers NIH, European and Japanese funders well but many low- and middle-income country funders poorly.
-- **Amounts.** All amounts are nominal USD.
+- **Missing amounts.** 272 relevant grants have no amount, mostly from Brazil (FAPESP, CAPES), Russia (RFBR, RSF) and Belgium (BELSPO, FWO). Dollar shares are shares of *recorded* funding; counting grants, the Global South receives 17.5% (Tables S32–S33).
+- **Amounts.** Amounts are nominal USD; constant-dollar growth is in Table S28. Purchasing-power adjustment needs `data/reference/ppp_price_level_2023.csv` filled in.
+- **Engagement.** "Transient" depends on the activity rule (82% with the start-year rule, 3.5% with the full-span rule). The share of researchers with a single grant (84%) does not.
 - **Gender.** Inferred from first names, so it is binary.
-- **Topics.** About 60% of grants keep the same topic when the LDA random seed changes (Table S9), so read topic results at the aggregate level.
+- **Topics.** About 60% of grants keep the same topic when the LDA random seed changes (Table S9), and the refitted model agrees with the 2024 assignment for 59% of grants. The rise of antibiotic-resistance research holds under every topic method, but its level does not (26% to 44% of 2016–2023 funding, Table S36), so read topic results as trends.
 
 ## Licence and citation
 Code: MIT (`LICENSE`). Cite with `CITATION.cff`.
